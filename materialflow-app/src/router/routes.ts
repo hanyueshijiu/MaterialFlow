@@ -3,9 +3,40 @@ import Home from '../views/home/index.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
-    component: () => import('../views/home/index.vue'),
+    component: Home,
+    children: [
+      {
+        path: '/',
+        redirect: 'orderList'
+      },
+      {
+        path:'orderList',
+        name: 'orderList',
+        component: () => import('@/views/order/orderList.vue')
+      },
+      {
+        path:'orderDetail',
+        name: 'orderDetail',
+        component: () => import('@/views/order/orderDeatil.vue')
+      },
+      {
+        path:'customerInfo',
+        name: 'customerInfo',
+        component: () => import('@/views/ruku/customerInfo.vue')
+      },
+      {
+        path:'orderInfo',
+        name: 'orderInfo',
+        component: () => import('@/views/ruku/orderInfo.vue')
+      },
+      {
+        path:'administrator',
+        name: 'administrator',
+        component: () => import('@/views/administrator/index.vue')
+      },
+    ]
   },
   {
     path: '/login',

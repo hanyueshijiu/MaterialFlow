@@ -7,23 +7,50 @@
       </div>
       <div class="main">
         <div class="inpbox">
-          <input type="text" placeholder="请输入账号" />
+          <input type="text" v-model="loginInfo.account" placeholder="请输入账号" />
         </div>
         <div class="inpbox">
-          <input type="password" placeholder="请输入密码"  />
+          <input type="password" v-model="loginInfo.password" placeholder="请输入密码" />
         </div>
       </div>
       <div class="action">
-        <div class="btn">登录</div>
+        <div class="btn" @click="submit">登录</div>
       </div>
-      <div class="tips">
+      <div class="tips" @click="goToRegister">
         <p>没有账号，立即注册</p>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { reactive } from "vue";
+import { showSuccessToast, showToast } from 'vant';
+import 'vant/es/toast/style';
+const router = useRouter();
+
+const loginInfo = reactive({
+  account: '',
+  password: '',
+});
+
+// 登录
+const submit = () => {
+  if(loginInfo.account === '') {
+    showToast('账号不能为空！')
+  } else if(loginInfo.password === '') {
+    showToast('请输入密码！')
+  }else {
+    showSuccessToast('登录成功！');
+    router.push('/home/orderList');
+  }
+};
+// 跳转注册
+const goToRegister = () => {
+  router.replace("/register");
+};
+</script>
 
 <style lang="less" scoped>
 .container {
@@ -39,21 +66,21 @@
   .form {
     width: 80%;
     height: 17rem;
-    background-color: rgba(205,234,247,0.3);
+    background-color: rgba(205, 234, 247, 0.3);
     color: #fff;
     padding: 5rem 2rem;
     border-radius: 1rem;
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
     .detail {
-      h1 {  
-        background: linear-gradient(to right, #f00, #00f);  
-        -webkit-background-clip: text;  
-        -webkit-text-fill-color: transparent;  
+      h1 {
+        background: linear-gradient(to right, #f00, #00f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
     .main {
       .inpbox {
-        background: linear-gradient(90deg, #03a9f4, #f441a5,#ffeb3b, #03a9f4);
+        background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
         background-size: 400%;
         width: 100%;
         height: 3rem;
@@ -64,7 +91,7 @@
         justify-content: center;
         transition: all 1s;
         input {
-          background-color: rgb(205,234,247);
+          background-color: rgb(205, 234, 247);
           border: 0;
           width: 100%;
           text-align: center;
@@ -82,7 +109,7 @@
       }
       @keyframes animate {
         0% {
-          background-position: 0,0;
+          background-position: 0, 0;
         }
         100% {
           background-position: 400% 0;
