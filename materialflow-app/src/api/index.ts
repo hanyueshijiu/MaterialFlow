@@ -13,7 +13,7 @@ const BASE_URL = 'http://localhost:3000' // 使得代码维护更简单
 // )
 
 export function post(url:string,body:any) {
-  return axios.post(BASE_URL+url,body)
+  return axios.post(BASE_URL+url,body,{})
 }
 
 export function get(url:string) {
