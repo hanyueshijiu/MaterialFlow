@@ -1,27 +1,34 @@
+<!--
+ * @Author: 李羊
+ * @Date: 2023-09-11 08:21:32
+ * @FilePath: \materialflow-app\src\views\home\index.vue
+ * @LastEditTime: 2023-09-11 08:42:14
+ * @Description: 
+-->
 <template>
-  <div class="home">
-    <router-view></router-view>
+    <div class="home">
+        <router-view></router-view>
 
-    <van-tabbar v-model="active">
-      <van-tabbar-item icon="records" to="/home/orderList">入库</van-tabbar-item>
-      <van-tabbar-item icon="description" to="/home/customerInfo">订单</van-tabbar-item>
-      <van-tabbar-item icon="bill-o" to="/home/administrator">明细</van-tabbar-item>
-    </van-tabbar>
-  </div>
+        <van-tabbar v-model="active">
+            <van-tabbar-item icon="records" to="/home/customerInfo">入库</van-tabbar-item>
+            <van-tabbar-item icon="description" to="/home/orderList">订单</van-tabbar-item>
+            <van-tabbar-item icon="bill-o" to="/home/administrator">明细</van-tabbar-item>
+        </van-tabbar>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
-const active = ref(1);
+const active = ref(1)
 </script>
 
 <style lang="less" scoped>
 .home {
-  width: 100vw;
-  height: 100vh;
-  background-image: url("../../assets/bg.png");
-  background-size: cover;
-  background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../../assets/bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 </style>
