@@ -28,6 +28,7 @@ import { useRouter } from "vue-router";
 import { reactive } from "vue";
 import { showSuccessToast, showToast } from 'vant';
 import 'vant/es/toast/style';
+import { login } from '@/api/user';
 const router = useRouter();
 
 const loginInfo = reactive({
@@ -36,14 +37,22 @@ const loginInfo = reactive({
 });
 
 // 登录
-const submit = () => {
+const submit = async() => {
   if(loginInfo.account === '') {
     showToast('账号不能为空！')
   } else if(loginInfo.password === '') {
     showToast('请输入密码！')
   }else {
+    await login({
+      username: loginInfo.account,
+      password: loginInfo.password
+    }).then((res:any) => {
+      console.log('====================================');
+      console.log(res);
+      console.log('====================================');
+    })
     showSuccessToast('登录成功！');
-    router.push('/home/orderList');
+    // router.push('/home/orderList');
   }
 };
 // 跳转注册

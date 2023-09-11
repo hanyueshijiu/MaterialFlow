@@ -6,16 +6,16 @@
       </div>
       <div class="main">
         <div class="inpbox">
-          <input type="text" placeholder="请输入姓名" />
+          <input type="text" v-model="registerInfo.username" placeholder="请输入姓名" />
         </div>
         <div class="inpbox">
-          <input type="password" placeholder="请输入密码"  />
+          <input type="password" v-model="registerInfo.password" placeholder="请输入密码"  />
         </div>
         <div class="inpbox">
-          <input type="password" placeholder="请再次输入密码"  />
+          <input type="password" v-model="registerInfo.confirmPassword" placeholder="请再次输入密码"  />
         </div>
       </div>
-      <div class="action">
+      <div class="action" @click="submit">
         <div class="btn">注册</div>
       </div>
       <div class="tips" @click="goToLogin">
@@ -26,9 +26,36 @@
 </template>
 
 <script setup lang="ts">
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { showSuccessToast, showToast } from 'vant';
+import 'vant/es/toast/style';
+import { register } from "@/api/user";
 const router = useRouter();
 
+const registerInfo = reactive( {
+  username: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const submit = async() => {
+  if(registerInfo.username === '') {
+    showToast('账号不能为空！')
+  } else if(registerInfo.password === '' || registerInfo.confirmPassword === '' || registerInfo.password !== registerInfo.confirmPassword) {
+    showToast('请保证两次密码不为空且相等！')
+  } else {
+    await register({
+      username: registerInfo.username,
+      password: registerInfo.password,
+      confirmPassword: registerInfo.confirmPassword
+    }).then((res:any) => {
+      console.log('====================================');
+      console.log(res);
+      console.log('====================================');
+    })
+  }
+}
 const goToLogin = () => {
   router.replace('/login');
 }

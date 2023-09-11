@@ -1,6 +1,6 @@
 import axios from 'axios'
 // import  router  from '../router/index'
-const BASE_URL = 'http://localhost:3000' // 使得代码维护更简单
+const BASE_URL = 'http://localhost:6666' // 使得代码维护更简单
 
 // //请求拦截
 // axios.interceptors.request.use((config:any) => {
