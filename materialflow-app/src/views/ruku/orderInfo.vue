@@ -2,11 +2,12 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\orderInfo.vue
- * @LastEditTime: 2023-09-11 14:37:27
+ * @LastEditTime: 2023-09-11 17:26:07
  * @Description: 
 -->
 <template>
     <div class="store">
+        <div class="title">入&nbsp;&nbsp;库</div>
         <div class="store_input">
             <div class="store_item">
                 <label for="dispatchAssociates">发货联系人</label>
@@ -99,6 +100,7 @@
                     @click="orderInfo.showCalendar = true"
                 />
                 <van-calendar v-model:show="orderInfo.showCalendar" @confirm="onConfirm" />
+                <i class="iconfont">&#xe73a;</i>
             </div>
         </div>
         <div class="store_operate">
@@ -109,7 +111,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { showToast } from 'vant'
+import { showToast, showSuccessToast } from 'vant'
 import 'vant/es/toast/style'
 import { reactive } from 'vue'
 import { rukuStore } from '../../store/modules/ruku'
@@ -155,6 +157,8 @@ const submitOrder = () => {
     } else if (orderInfo.goodName === '') {
         showToast('货物名称不能为空!')
     } else {
+        useRukuStore.submitOrder(orderInfo)
+        showSuccessToast('提交成功!')
     }
 }
 </script>
@@ -163,8 +167,16 @@ const submitOrder = () => {
 .store {
     width: 100vw;
     height: 100vh;
+    .title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #ffffff;
+        float: right;
+        padding-top: 1.25rem;
+        padding-right: 1.5rem;
+    }
     .store_input {
-        padding: 3.125rem 0.625rem 1.875rem;
+        padding: 4.75rem 0.625rem 1.875rem;
         box-sizing: border-box;
         .store_item {
             display: flex;
@@ -180,6 +192,11 @@ const submitOrder = () => {
                 border: none;
                 height: 1.875rem;
                 border-radius: 1rem;
+            }
+            .iconfont {
+                position: relative;
+                right: 11.5rem;
+                z-index: 0;
             }
             &:nth-child(8) {
                 input {
@@ -233,7 +250,5 @@ const submitOrder = () => {
         padding-left: 10px;
         text-align: left;
     }
-}
-.van-calendar {
 }
 </style>
