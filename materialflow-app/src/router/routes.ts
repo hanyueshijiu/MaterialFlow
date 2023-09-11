@@ -3,14 +3,14 @@ import Home from '../views/home/index.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
+    path: '/',
+    redirect: '/home/orderList'
+  },
+  {
     path: '/home',
     name: 'Home',
     component: Home,
     children: [
-      {
-        path: '/',
-        redirect: 'orderList'
-      },
       {
         path:'orderList',
         name: 'orderList',
