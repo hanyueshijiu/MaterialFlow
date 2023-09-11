@@ -50,9 +50,7 @@ const submit = async() => {
       password: registerInfo.password,
       confirmPassword: registerInfo.confirmPassword
     }).then((res:any) => {
-      console.log('====================================');
       console.log(res);
-      console.log('====================================');
     })
   }
 }

@@ -47,12 +47,10 @@ const submit = async() => {
       username: loginInfo.account,
       password: loginInfo.password
     }).then((res:any) => {
-      console.log('====================================');
       console.log(res);
-      console.log('====================================');
     })
     showSuccessToast('登录成功！');
-    // router.push('/home/orderList');
+    router.push('/home/orderList');
   }
 };
 // 跳转注册
