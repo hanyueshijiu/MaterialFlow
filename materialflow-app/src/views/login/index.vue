@@ -37,22 +37,22 @@ const loginInfo = reactive({
 })
 
 // 登录
-const submit = async() => {
-  if(loginInfo.account === '') {
-    showToast('账号不能为空！')
-  } else if(loginInfo.password === '') {
-    showToast('请输入密码！')
-  }else {
-    await login({
-      username: loginInfo.account,
-      password: loginInfo.password
-    }).then((res:any) => {
-      console.log(res);
-    })
-    showSuccessToast('登录成功！');
-    router.push('/home/orderList');
-  }
-};
+const submit = async () => {
+    if (loginInfo.account === '') {
+        showToast('账号不能为空！')
+    } else if (loginInfo.password === '') {
+        showToast('请输入密码！')
+    } else {
+        await login({
+            username: loginInfo.account,
+            password: loginInfo.password
+        }).then((res: any) => {
+            console.log(res)
+        })
+        showSuccessToast('登录成功！')
+        router.push('/home/orderList')
+    }
+}
 // 跳转注册
 const goToRegister = () => {
     router.replace('/register')

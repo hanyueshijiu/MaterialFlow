@@ -6,7 +6,18 @@ interface customerInfo {
     customerAddress: string
     firmName?: string
 }
-interface orderInfo {}
+interface orderInfo {
+    dispatchAssociates: string
+    dispatchPhone: string
+    dispatchAddress: string
+    acceptAssociates: string
+    acceptPhone: string
+    acceptAddress: string
+    goodName: string
+    count: number
+    weight: number
+    calendar: Date
+}
 
 export const rukuStore = defineStore({
     id: 'ruku',
@@ -19,6 +30,9 @@ export const rukuStore = defineStore({
     actions: {
         submitCustomer(customer) {
             this.customerInfo = customer
+        },
+        submitOrder(order) {
+            this.orderInfo = order
         }
     }
 })
