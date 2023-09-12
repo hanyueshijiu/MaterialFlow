@@ -1,10 +1,3 @@
-<!--
- * @Author: 李羊
- * @Date: 2023-09-11 08:21:32
- * @FilePath: \materialflow-app\src\views\home\index.vue
- * @LastEditTime: 2023-09-11 08:42:14
- * @Description: 
--->
 <template>
     <div class="home">
         <router-view></router-view>
@@ -27,7 +20,7 @@ const active = ref(1)
 .home {
     width: 100vw;
     height: 100vh;
-    background-image: url('../../assets/bg.png');
+    background-image: url('../../assets/bg2.png');
     background-size: cover;
     background-repeat: no-repeat;
 }
