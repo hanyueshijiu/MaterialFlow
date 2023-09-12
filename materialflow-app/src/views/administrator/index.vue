@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\administrator\index.vue
- * @LastEditTime: 2023-09-11 19:49:18
+ * @LastEditTime: 2023-09-12 08:23:01
  * @Description: 
 -->
 <template>
@@ -93,7 +93,8 @@ const initGraph = () => {
             {
                 name: 'incomes',
                 type: 'pie',
-                radius: ['40%', '70%'],
+                top: '-27%',
+                radius: ['30%', '56%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 10,
@@ -101,13 +102,13 @@ const initGraph = () => {
                     borderWidth: 2
                 },
                 label: {
-                    show: false,
+                    show: true,
                     position: 'center'
                 },
                 emphasis: {
                     label: {
                         show: true,
-                        fontSize: 40,
+                        fontSize: 18,
                         fontWeight: 'bold'
                     }
                 },
@@ -130,13 +131,13 @@ const initGraph = () => {
         },
         grid: {
             left: '2%',
-            right: '2%',
-            bottom: '10%',
+            right: '10%',
+            top: '6%',
+            bottom: '4%',
             containLabel: true
         },
         xAxis: {
-            type: 'value',
-            boundaryGap: [0, 0.01]
+            type: 'value'
         },
         yAxis: {
             type: 'category',
@@ -146,7 +147,11 @@ const initGraph = () => {
             {
                 name: 'count',
                 type: 'bar',
-                data: [18203, 23489, 29034, 104970, 131744, 230230]
+                label: {
+                    show: true,
+                    position: 'right'
+                },
+                data: [18203, 23489, 29034, 104970, 131744, 140230]
             }
         ]
     })
@@ -160,10 +165,10 @@ const initGraph = () => {
     box-sizing: border-box;
     & > div {
         .title {
-            font-size: 20px;
+            font-size: 1.125rem;
             font-weight: 600;
             color: #215476;
-            padding-bottom: 0.625rem;
+            padding-bottom: 0.5rem;
             &::before {
                 content: '';
                 width: 0rem;
@@ -180,6 +185,7 @@ const initGraph = () => {
             display: flex;
             background: #fff;
             align-items: center;
+            border-radius: 1.25rem;
             .haulage_content {
                 flex: 0 0 6.25rem;
                 p {
@@ -197,7 +203,12 @@ const initGraph = () => {
         .toroidal_wrap {
             height: 11.125rem;
             background: #fff;
+            border-radius: 1.25rem;
             .toroidal_content {
+                font-size: 1rem;
+                p {
+                    padding-left: 0.75rem;
+                }
             }
             .toroidal_graph {
                 height: 100%;
@@ -205,10 +216,11 @@ const initGraph = () => {
         }
     }
     .sales {
-        height: 11.25rem;
+        height: 10.625rem;
         .sales_bar {
             height: 100%;
             background: #fff;
+            border-radius: 1.25rem;
         }
     }
 }
