@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\router\routes.ts
- * @LastEditTime: 2023-09-11 08:30:17
+ * @LastEditTime: 2023-09-12 09:31:26
  * @Description:
  */
 import { RouteRecordRaw } from 'vue-router'

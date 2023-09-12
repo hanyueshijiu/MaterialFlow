@@ -1,5 +1,13 @@
+<!--
+ * @Author: 李羊
+ * @Date: 2023-09-11 08:21:32
+ * @FilePath: \materialflow-app\src\views\ruku\customerInfo.vue
+ * @LastEditTime: 2023-09-11 17:23:25
+ * @Description: 
+-->
 <template>
     <div class="customer">
+        <div class="title">入&nbsp;&nbsp;库</div>
         <div class="customer_input">
             <div class="customer_input_item">
                 <label for="name"><i class="iconfont">&#xe63f;</i>客户姓名</label>
@@ -77,18 +85,26 @@ const submitCustomerInfo = () => {
 
 <style lang="less" scoped>
 .customer {
+    .title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #ffffff;
+        float: right;
+        padding-top: 1.25rem;
+        padding-right: 1.5rem;
+    }
     width: 100vw;
     height: 100vh;
     overflow: auto;
     .customer_input {
         margin: 6.25rem 0.625rem 5rem;
-        background: #ffffff;
+        background: rgba(0, 0, 0, 0.1);
         border-radius: 1.25rem;
         .customer_input_item {
             padding: 0.75rem 0.875rem;
             border-radius: 1.25rem/1rem;
             overflow: hidden;
-            border-bottom: 0.125rem solid #f4f4f4;
+            border-bottom: 0.0625rem solid #f4f4f4;
             display: flex;
             label {
                 flex: 0 0 5.875rem;
@@ -97,7 +113,11 @@ const submitCustomerInfo = () => {
                 }
             }
             input {
-                border: none;
+                border: 0;
+                outline: none;
+                background-color: rgba(0, 0, 0, 0);
+                font-size: 1rem;
+                color: #fff;
             }
         }
     }
