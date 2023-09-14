@@ -1,10 +1,3 @@
-<!--
- * @Author: 李羊
- * @Date: 2023-09-11 08:21:32
- * @FilePath: \materialflow-app\src\views\ruku\customerInfo.vue
- * @LastEditTime: 2023-09-11 17:23:25
- * @Description: 
--->
 <template>
     <div class="customer">
         <div class="title">入&nbsp;&nbsp;库</div>
