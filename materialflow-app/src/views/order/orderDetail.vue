@@ -56,10 +56,15 @@
         </div>
         <div class="datailBox">
             <div class="title"><van-icon name="label-o" />运输状态</div>
-            <van-radio-group class="checkBox" v-model="checked" direction="horizontal">
-                <van-radio name="1">已入库</van-radio>
-                <van-radio name="2">运输中</van-radio>
-                <van-radio name="3">已送达</van-radio>
+            <van-radio-group
+                class="checkBox"
+                v-model="checked"
+                direction="horizontal"
+                @change="changeState"
+            >
+                <van-radio name="已入库">已入库</van-radio>
+                <van-radio name="运输中">运输中</van-radio>
+                <van-radio name="已送达">已送达</van-radio>
             </van-radio-group>
         </div>
         <div class="submitBtn">提交</div>
@@ -82,8 +87,9 @@ interface orderInfo {
     count: number
     weight: number
     calendar: Date
+    state: string
 }
-const checked = ref('1')
+const checked = ref('')
 
 const route = useRoute()
 const useOrderStore = orderStore()
@@ -93,10 +99,15 @@ nextTick(() => {
     initOrderMessage()
 })
 
-function initOrderMessage() {
+const initOrderMessage = () => {
     if (route.query.ID) {
-        orderMsg.value = useOrderStore.findOrderInfo(route.query.ID)[0]
+        useOrderStore.findOrderInfo(route.query.ID)
+        orderMsg.value = useOrderStore.orderMsg[0]
+        checked.value = useOrderStore.orderMsg[0].state
     }
+}
+const changeState = () => {
+    useOrderStore.changeState(checked.value)
 }
 </script>
 
