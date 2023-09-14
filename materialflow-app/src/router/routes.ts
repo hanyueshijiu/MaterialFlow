@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\router\routes.ts
- * @LastEditTime: 2023-09-12 09:31:26
+ * @LastEditTime: 2023-09-13 15:56:58
  * @Description:
  */
 import { RouteRecordRaw } from 'vue-router'
@@ -18,6 +18,11 @@ export const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: Home,
         children: [
+            {
+                path: '',
+                name: 'order',
+                redirect: '/home/orderList'
+            },
             {
                 path: 'orderList',
                 name: 'orderList',

@@ -24,11 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { reactive } from 'vue'
-import { showSuccessToast, showToast } from 'vant'
-import 'vant/es/toast/style'
-import { login } from '@/api/user'
+import { useRouter } from "vue-router";
+import { reactive } from "vue";
+import { showSuccessToast, showToast } from 'vant';
+import 'vant/es/toast/style';
+import { login } from '@/api/user';
 const router = useRouter()
 
 const loginInfo = reactive({

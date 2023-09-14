@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\orderInfo.vue
- * @LastEditTime: 2023-09-11 17:26:07
+ * @LastEditTime: 2023-09-13 15:28:38
  * @Description: 
 -->
 <template>
@@ -115,7 +115,9 @@ import { showToast, showSuccessToast } from 'vant'
 import 'vant/es/toast/style'
 import { reactive } from 'vue'
 import { rukuStore } from '../../store/modules/ruku'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const useRukuStore = rukuStore()
 const { customerInfo } = storeToRefs(useRukuStore)
 const orderInfo = reactive({
@@ -159,6 +161,7 @@ const submitOrder = () => {
     } else {
         useRukuStore.submitOrder(orderInfo)
         showSuccessToast('提交成功!')
+        router.push('/home/orderList')
     }
 }
 </script>
