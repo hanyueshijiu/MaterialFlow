@@ -20,11 +20,16 @@
             <div class="btn">搜索</div>
         </div>
         <!-- 分类bar -->
-        <div class="kindsBox">
-            <div class="kind focus">全部</div>
-            <div class="kind">已入库</div>
-            <div class="kind">运输中</div>
-            <div class="kind">已送达</div>
+        <div class="kindsBox" ref="kindBox" @click="selectTabbar">
+            <div
+                class="kind"
+                :class="{ focus: dataIndex == item.id }"
+                v-for="item in tabbar"
+                :data-index="item.id"
+                :key="item.id"
+            >
+                {{ item.name }}
+            </div>
         </div>
         <!-- 订单详情列表 -->
         <div class="orderListBox">
@@ -40,7 +45,7 @@
                 </div>
                 <div class="middle">
                     <div class="start">发货地址:{{ order.dispatchAddress }}</div>
-                    <div class="title">运输中</div>
+                    <div class="title">{{ order.state }}</div>
                     <div class="end">收货地址:{{ order.acceptAddress }}</div>
                 </div>
                 <div class="bottom">运费： 20元</div>
@@ -68,9 +73,19 @@ interface orderInfo {
     count: number
     weight: number
     calendar: Date
+    state: string
 }
 
+const tabbar = [
+    { id: 1, name: '全部' },
+    { id: 2, name: '已入库' },
+    { id: 3, name: '运输中' },
+    { id: 4, name: '已送达' }
+]
+
+const kindBox = ref(null)
 const layout = ref(false)
+const dataIndex = ref(1)
 const account = ref('张三')
 const actions = ref([{ name: '退出登录' }, { name: '' }])
 
@@ -83,6 +98,19 @@ orderLists.value = orderList.value
 const onSelect = (item: any) => {
     layout.value = false
     showToast(item.name)
+}
+//tabbar选择
+const selectTabbar = (e: any) => {
+    dataIndex.value = e.target.dataset.index
+
+    const content = e.target.textContent
+    if (content === '全部') {
+        orderLists.value = orderList.value
+    } else {
+        orderLists.value = orderList.value.filter(item => {
+            return item.state === content
+        })
+    }
 }
 const goToDetail = (ID: string) => {
     router.push({ path: '/home/orderDetail', query: { ID: ID } })
@@ -176,6 +204,7 @@ const goToDetail = (ID: string) => {
         .focus {
             background: rgba(0, 0, 0, 0.8);
             color: #fff;
+            transition: all 0.5s linear;
         }
     }
     .orderListBox {

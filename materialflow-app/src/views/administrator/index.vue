@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\administrator\index.vue
- * @LastEditTime: 2023-09-13 14:04:18
+ * @LastEditTime: 2023-09-14 14:16:14
  * @Description: 
 -->
 <template>
@@ -11,9 +11,9 @@
             <div class="title">物流运输统计</div>
             <div class="haulage_wrap">
                 <div class="haulage_content">
-                    <p>已入库:</p>
-                    <p>运输中:</p>
-                    <p>已送达:</p>
+                    <p>已入库:{{ inStock }}</p>
+                    <p>运输中:{{ inTransit }}</p>
+                    <p>已送达:{{ inServed }}</p>
                 </div>
                 <div class="haulage_graph" ref="pieRef"></div>
             </div>
@@ -37,10 +37,16 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { orderStore } from '../../store/modules/order'
+import { storeToRefs } from 'pinia'
+
 const pieRef = ref(null)
 const toroidalRef = ref(null)
 const barRef = ref(null)
+
+const useOrderStore = orderStore()
+const { orderList } = storeToRefs(useOrderStore)
 
 onMounted(() => {
     initGraph()
@@ -70,9 +76,9 @@ const initGraph = () => {
                 radius: ['0%', '70%'],
                 top: '18%',
                 data: [
-                    { value: 120, name: '已入库' },
-                    { value: 75, name: '运输中' },
-                    { value: 200, name: '已送达' }
+                    { value: inStock.value, name: '已入库' },
+                    { value: inTransit.value, name: '运输中' },
+                    { value: inServed.value, name: '已送达' }
                 ],
                 emphasis: {
                     itemStyle: {
@@ -156,6 +162,36 @@ const initGraph = () => {
         ]
     })
 }
+
+//已入库
+const inStock = computed(() => {
+    let stock = 0
+    orderList.value.forEach(item => {
+        if (item.state === '已入库') {
+            stock++
+        }
+    })
+    return stock
+})
+//运输中
+const inTransit = computed(() => {
+    let transit = 0
+    orderList.value.forEach(item => {
+        if (item.state === '运输中') {
+            transit++
+        }
+    })
+    return transit
+})
+const inServed = computed(() => {
+    let serve = 0
+    orderList.value.forEach(item => {
+        if (item.state === '已送达') {
+            serve++
+        }
+    })
+    return serve
+})
 </script>
 
 <style lang="less" scoped>
