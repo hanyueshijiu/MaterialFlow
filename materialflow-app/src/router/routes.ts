@@ -12,6 +12,11 @@ export const routes: RouteRecordRaw[] = [
         component: Home,
         children: [
             {
+                path: '',
+                name: 'order',
+                redirect: '/home/orderList'
+            },
+            {
                 path: 'orderList',
                 name: 'orderList',
                 component: () => import('@/views/order/orderList.vue')

@@ -110,7 +110,7 @@ import { reactive } from 'vue'
 import { rukuStore } from '../../store/modules/ruku'
 import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 const useRukuStore = rukuStore()
 const { customerInfo } = storeToRefs(useRukuStore)
 const orderInfo = reactive({

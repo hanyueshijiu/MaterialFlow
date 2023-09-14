@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\administrator\index.vue
- * @LastEditTime: 2023-09-12 08:23:01
+ * @LastEditTime: 2023-09-13 14:04:18
  * @Description: 
 -->
 <template>
@@ -183,7 +183,7 @@ const initGraph = () => {
         .haulage_wrap {
             height: 10.625rem;
             display: flex;
-            background: #fff;
+            background: #c3d5de;
             align-items: center;
             border-radius: 1.25rem;
             .haulage_content {
@@ -202,7 +202,7 @@ const initGraph = () => {
     .toroidal {
         .toroidal_wrap {
             height: 11.125rem;
-            background: #fff;
+            background: #c3d5de;
             border-radius: 1.25rem;
             .toroidal_content {
                 font-size: 1rem;
@@ -219,7 +219,7 @@ const initGraph = () => {
         height: 10.625rem;
         .sales_bar {
             height: 100%;
-            background: #fff;
+            background: #c3d5de;
             border-radius: 1.25rem;
         }
     }
