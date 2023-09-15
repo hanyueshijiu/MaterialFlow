@@ -134,6 +134,7 @@ const submitStatus = async (order: orderInfo) => {
 .container {
     padding: 0rem 0.625rem;
     padding-top: 0.875rem;
+    background: #f6f6f6;
     .addressBox {
         display: flex;
         justify-content: center;
@@ -180,7 +181,7 @@ const submitStatus = async (order: orderInfo) => {
     .datailBox {
         margin: 0.875rem 0rem;
         background: #ffffff;
-        box-shadow: 0rem 0rem 0.25rem 0.25rem #dddddd;
+        box-shadow: 0rem 0rem 0.25rem 0.25rem #e0e0e0c6;
         padding: 0.4375rem 1rem;
         box-sizing: border-box;
         border-radius: 0.625rem;
