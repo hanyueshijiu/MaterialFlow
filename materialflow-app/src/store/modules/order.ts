@@ -2,26 +2,27 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\store\modules\order.ts
- * @LastEditTime: 2023-09-14 14:18:54
+ * @LastEditTime: 2023-09-15 20:02:03
  * @Description:
  */
 import { defineStore } from 'pinia'
 import store from '../index'
 interface orderInfo {
-    ID: string
-    dispatchAssociates: string
-    dispatchPhone: string
-    dispatchAddress: string
-    acceptAssociates: string
-    acceptPhone: string
-    acceptAddress: string
+    id: string
+    sender: string
+    senderPhone: string
+    senderAddress: string
+    recipient: string
+    recipientPhone: string
+    recipientAddress: string
     goodName: string
+    ename: string
     count: number
     weight: number
-    calendar: Date
-    state: string
+    date: Date
+    status: string
+    price: number
 }
-
 const list = [
     {
         ID: '12',
@@ -35,7 +36,7 @@ const list = [
         count: 20,
         weight: 100,
         calendar: '2023/9/13',
-        state: '已入库'
+        status: '已入库'
     },
     {
         ID: '13',
@@ -49,7 +50,7 @@ const list = [
         count: 20,
         weight: 80,
         calendar: '2023/9/13',
-        state: '已入库'
+        status: '已入库'
     },
     {
         ID: '14',
@@ -63,7 +64,7 @@ const list = [
         count: 2,
         weight: 5,
         calendar: '2023/9/14',
-        state: '运输中'
+        status: '运输中'
     },
     {
         ID: '15',
@@ -77,31 +78,51 @@ const list = [
         count: 10,
         weight: 50,
         calendar: '2023/9/13',
-        state: '已入库'
+        status: '已入库'
+    },
+    {
+        ID: '16',
+        dispatchAssociates: 'Tfboys',
+        dispatchPhone: '16778966552',
+        dispatchAddress: '西安',
+        acceptAssociates: '蒋莹',
+        acceptPhone: '19878675119',
+        acceptAddress: '遂川',
+        goodName: '书籍',
+        count: 10,
+        weight: 50,
+        calendar: '2023/9/14',
+        status: '已入库'
     }
 ] as orderInfo[]
 export const orderStore = defineStore({
     id: 'order',
     state: () => {
         return {
-            orderList: list,
+            orderList: [] as orderInfo[],
             orderMsg: [] as orderInfo[]
         }
     },
     actions: {
-        //添加订单信息至列表
-        addOrderList(order: orderInfo) {
-            this.orderList.push(order)
+        //从数据库获取订单列表
+        getOrderList(orderList) {
+            this.orderList = orderList
         },
         //根据ID获取订单详情
         findOrderInfo(ID): orderInfo[] {
             this.orderMsg = this.orderList.filter(item => {
-                return item.ID === ID
+                return item.id.toString() === ID
             })
         },
         //修改订单状态
         changeState(state) {
-            this.orderMsg[0].state = state
+            this.orderMsg[0].status = state
+        },
+        //根据电话搜索
+        findOrderByPhone(phone): orderInfo[] {
+            return this.orderList.filter(item => {
+                return item.recipientPhone === phone || item.senderPhone === phone
+            })
         }
     }
 })

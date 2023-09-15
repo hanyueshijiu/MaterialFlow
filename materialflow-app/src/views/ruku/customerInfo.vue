@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\customerInfo.vue
- * @LastEditTime: 2023-09-11 17:23:25
+ * @LastEditTime: 2023-09-15 09:31:32
  * @Description: 
 -->
 <template>
@@ -76,6 +76,7 @@ const submitCustomerInfo = () => {
     } else if (customerInfo.customerAddress === '') {
         showToast('客户地址不能为空!')
     } else {
+        // 保存客户信息在仓库
         useRukuStore.submitCustomer(customerInfo)
         showSuccessToast('成功提交!')
         router.push('/home/orderInfo')
