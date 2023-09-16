@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:33:47
  * @FilePath: \materialflow-app\src\store\modules\ruku.ts
- * @LastEditTime: 2023-09-14 13:58:33
+ * @LastEditTime: 2023-09-15 09:07:51
  * @Description:
  */
 import { defineStore } from 'pinia'
@@ -14,32 +14,35 @@ interface customerInfo {
     firmName?: string
 }
 interface orderInfo {
-    dispatchAssociates: string
-    dispatchPhone: string
-    dispatchAddress: string
-    acceptAssociates: string
-    acceptPhone: string
-    acceptAddress: string
+    sender: string
+    senderPhone: string
+    senderAddress: string
+    recipient: string
+    recipientPhone: string
+    recipientAddress: string
     goodName: string
+    ename: string
     count: number
     weight: number
-    calendar: Date
+    date: Date
+    status: string
+    price: number
 }
 
 export const rukuStore = defineStore({
     id: 'ruku',
     state: () => {
         return {
-            customerInfo: {} as customerInfo,
-            orderInfo: {} as orderInfo
+            customerInf: {} as customerInfo,
+            orderInf: {} as orderInfo
         }
     },
     actions: {
         submitCustomer(customer) {
-            this.customerInfo = customer
+            this.customerInf = customer
         },
         submitOrder(order) {
-            this.orderInfo = order
+            this.orderInf = order
         }
     }
 })

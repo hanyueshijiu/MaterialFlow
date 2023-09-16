@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+=======
+<!--
+ * @Author: 李羊
+ * @Date: 2023-09-11 08:21:32
+ * @FilePath: \materialflow-app\src\views\ruku\orderInfo.vue
+ * @LastEditTime: 2023-09-16 18:44:44
+ * @Description: 
+-->
+>>>>>>> f07c265f04af57f77fedb4be653d8a5a18fc7f1c
 <template>
     <div class="store">
         <div class="title">入&nbsp;&nbsp;库</div>
@@ -7,7 +17,7 @@
                 <input
                     type="text"
                     id="dispatchAssociates"
-                    :value="orderInfo.dispatchAssociates"
+                    :value="orderInfo.sender"
                     placeholder="请输入发货联系人姓名"
                     readonly
                 />
@@ -17,7 +27,7 @@
                 <input
                     type="text"
                     id="dispatchPhone"
-                    :value="orderInfo.dispatchPhone"
+                    :value="orderInfo.senderPhone"
                     placeholder="请输入发货联系电话"
                     readonly
                 />
@@ -28,7 +38,7 @@
                 <input
                     type="text"
                     id="dispatchAddress"
-                    v-model="orderInfo.dispatchAddress"
+                    v-model="orderInfo.senderAddress"
                     placeholder="请输入发货地址"
                 />
             </div>
@@ -37,7 +47,7 @@
                 <input
                     type="text"
                     id="acceptAssociates"
-                    v-model="orderInfo.acceptAssociates"
+                    v-model="orderInfo.recipient"
                     placeholder="请输入收货联系人姓名"
                 />
             </div>
@@ -46,7 +56,7 @@
                 <input
                     type="text"
                     id="acceptPhone"
-                    v-model="orderInfo.acceptPhone"
+                    v-model="orderInfo.recipientPhone"
                     placeholder="请输入收货联系电话"
                 />
             </div>
@@ -55,7 +65,7 @@
                 <input
                     type="text"
                     id="acceptAddress"
-                    v-model="orderInfo.acceptAddress"
+                    v-model="orderInfo.recipientAddress"
                     placeholder="请输入收货地址"
                 />
             </div>
@@ -89,7 +99,7 @@
             <div class="store_item">
                 <van-cell
                     title="日期"
-                    :value="orderInfo.calendar"
+                    :value="orderInfo.date"
                     @click="orderInfo.showCalendar = true"
                 />
                 <van-calendar v-model:show="orderInfo.showCalendar" @confirm="onConfirm" />
@@ -104,57 +114,91 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { showToast, showSuccessToast } from 'vant'
+import { showToast, showSuccessToast, showFailToast } from 'vant'
 import 'vant/es/toast/style'
 import { reactive } from 'vue'
 import { rukuStore } from '../../store/modules/ruku'
 import { useRouter } from 'vue-router'
+import { postOrderMsg } from '../../api/order'
 
 const router = useRouter()
 const useRukuStore = rukuStore()
-const { customerInfo } = storeToRefs(useRukuStore)
+const { customerInf, orderInf } = storeToRefs(useRukuStore)
 const orderInfo = reactive({
-    dispatchAssociates: customerInfo.value.customerName,
-    dispatchPhone: customerInfo.value.customerPhone,
-    dispatchAddress: '',
-    acceptAssociates: '',
-    acceptPhone: '',
-    acceptAddress: '',
+    sender: customerInf.value.customerName,
+    senderPhone: customerInf.value.customerPhone,
+    senderAddress: '',
+    companyName: customerInf.value.firmName,
+    recipient: '',
+    recipientPhone: '',
+    recipientAddress: '',
+    ename: '',
     count: 1,
     weight: 1,
-    calendar: '',
+    date: '',
     goodName: '',
-    showCalendar: false
+    showCalendar: false,
+    status: '已入库',
+    price: 10
 })
 
 //格式化时间
 const formatDate = (date: Date) => `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 const onConfirm = (value: Date) => {
     orderInfo.showCalendar = false
-    orderInfo.calendar = formatDate(value)
+    orderInfo.date = formatDate(value)
 }
 //提交信息
-const submitOrder = () => {
-    if (orderInfo.dispatchAddress === '') {
+const submitOrder = async () => {
+    const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
+    if (orderInfo.senderAddress === '') {
         showToast('发货地址不能为空!')
-    } else if (orderInfo.acceptAssociates === '') {
+    } else if (orderInfo.recipient === '') {
         showToast('收货联系人不能为空!')
-    } else if (orderInfo.acceptPhone === '') {
+    } else if (orderInfo.recipientPhone === '') {
         showToast('收货联系电话不能为空!')
-    } else if (orderInfo.acceptAddress === '') {
+    } else if (!mobileReg.test(orderInfo.recipientPhone)) {
+        showToast('收货联系号码错误!')
+    } else if (orderInfo.recipientAddress === '') {
         showToast('收货地址不能为空!')
     } else if (orderInfo.count <= 0) {
         showToast('数量不能为小于0!')
     } else if (orderInfo.weight <= 0) {
         showToast('重量不能为小于0!')
-    } else if (orderInfo.calendar === '') {
+    } else if (orderInfo.date === '') {
         showToast('日期不能为空!')
     } else if (orderInfo.goodName === '') {
         showToast('货物名称不能为空!')
     } else {
+        //将订单信息保存在仓库
         useRukuStore.submitOrder(orderInfo)
-        showSuccessToast('提交成功!')
-        router.push('/home/orderList')
+        if (orderInf.value.weight > 10) {
+            orderInf.value.price = orderInf.value.weight * 0.5 * orderInf.value.count
+        } else {
+            orderInf.value.price = 1 * orderInf.value.count
+        }
+        const res = await postOrderMsg({
+            sender: customerInf.value.customerName,
+            senderPhone: customerInf.value.customerPhone,
+            senderAddress: orderInf.value.senderAddress,
+            companyName: customerInf.value.firmName,
+            recipient: orderInf.value.recipient,
+            recipientPhone: orderInf.value.recipientPhone,
+            recipientAddress: orderInf.value.recipientAddress,
+            goodName: orderInf.value.goodName,
+            ename: localStorage.getItem('account'),
+            count: orderInf.value.count,
+            weight: orderInf.value.weight,
+            date: orderInf.value.date,
+            status: orderInf.value.status,
+            price: orderInf.value.price
+        })
+        if (res.code !== 0) {
+            showFailToast(res.message)
+        } else {
+            showSuccessToast(res.message)
+            router.push('/home/orderList')
+        }
     }
 }
 </script>

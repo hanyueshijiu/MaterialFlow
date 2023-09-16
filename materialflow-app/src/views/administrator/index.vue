@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\administrator\index.vue
- * @LastEditTime: 2023-09-14 14:16:14
+ * @LastEditTime: 2023-09-16 00:02:52
  * @Description: 
 -->
 <template>
@@ -22,8 +22,8 @@
             <div class="title">实际收入统计</div>
             <div class="toroidal_wrap">
                 <div class="toroidal_content">
-                    <p>预计获取收入:</p>
-                    <p>实际获取收入:</p>
+                    <p>预计获取收入:{{ proIncome }}元</p>
+                    <p>实际获取收入:{{ actIncome }}元</p>
                 </div>
                 <div class="toroidal_graph" ref="toroidalRef"></div>
             </div>
@@ -38,24 +38,55 @@
 <script setup lang="ts">
 import * as echarts from 'echarts'
 import { ref, onMounted, computed } from 'vue'
-import { orderStore } from '../../store/modules/order'
-import { storeToRefs } from 'pinia'
+// import { orderStore } from '../../store/modules/order'
+// import { storeToRefs } from 'pinia'
+import { getAllOrderList, getStaffPerformance } from '../../api/order'
+
+interface orderInfo {
+    id: string
+    sender: string
+    senderPhone: string
+    senderAddress: string
+    recipient: string
+    recipientPhone: string
+    recipientAddress: string
+    goodName: string
+    ename: string
+    count: number
+    weight: number
+    date: Date
+    status: string
+    price: number
+}
 
 const pieRef = ref(null)
 const toroidalRef = ref(null)
 const barRef = ref(null)
 
-const useOrderStore = orderStore()
-const { orderList } = storeToRefs(useOrderStore)
+const DBOrderList = ref([] as orderInfo[])
+const staff = ref({})
+let keys: string[] = []
+let values: number[] = []
+let pie: echarts.ECharts | null = null,
+    toroidal: echarts.ECharts | null = null,
+    bar: echarts.ECharts | null = null
 
-onMounted(() => {
-    initGraph()
+onMounted(async () => {
+    getDBOrderList()
+    initGraph([], [])
+    staffPerformance()
 })
 
-const initGraph = () => {
-    var pie = echarts.init(pieRef.value)
-    var toroidal = echarts.init(toroidalRef.value)
-    var bar = echarts.init(barRef.value)
+const initGraph = (keys: string[], values: number[]) => {
+    if (!pie) {
+        pie = echarts.init(pieRef.value)
+    }
+    if (!toroidal) {
+        toroidal = echarts.init(toroidalRef.value)
+    }
+    if (!bar) {
+        bar = echarts.init(barRef.value)
+    }
     pie.setOption({
         title: {
             left: 'center',
@@ -73,7 +104,7 @@ const initGraph = () => {
             {
                 name: 'Access From',
                 type: 'pie',
-                radius: ['0%', '70%'],
+                radius: ['0%', '72%'],
                 top: '18%',
                 data: [
                     { value: inStock.value, name: '已入库' },
@@ -95,35 +126,31 @@ const initGraph = () => {
         ]
     })
     toroidal.setOption({
+        tooltip: {
+            trigger: 'item'
+        },
         series: [
             {
                 name: 'incomes',
                 type: 'pie',
-                top: '-27%',
-                radius: ['30%', '56%'],
+                radius: ['40%', '84%'],
                 avoidLabelOverlap: false,
-                itemStyle: {
-                    borderRadius: 10,
-                    borderColor: '#fff',
-                    borderWidth: 2
-                },
                 label: {
-                    show: true,
+                    show: false,
                     position: 'center'
                 },
                 emphasis: {
                     label: {
                         show: true,
-                        fontSize: 18,
-                        fontWeight: 'bold'
+                        fontSize: 18
                     }
                 },
                 labelLine: {
                     show: false
                 },
                 data: [
-                    { value: 1048, name: '预计收入' },
-                    { value: 735, name: '实际收入' }
+                    { value: proIncome.value, name: '预计收入' },
+                    { value: actIncome.value, name: '实际收入' }
                 ]
             }
         ]
@@ -147,7 +174,7 @@ const initGraph = () => {
         },
         yAxis: {
             type: 'category',
-            data: ['张三', '李四', '王五', '赵六', '陈绮', '徐八']
+            data: keys
         },
         series: [
             {
@@ -157,17 +184,24 @@ const initGraph = () => {
                     show: true,
                     position: 'right'
                 },
-                data: [18203, 23489, 29034, 104970, 131744, 140230]
+                data: values
             }
         ]
     })
 }
 
+//直接查询数据库中的记录
+const getDBOrderList = async () => {
+    const res = await getAllOrderList()
+    if (res.data.code === 0) {
+        DBOrderList.value = res.data.result
+    }
+}
 //已入库
 const inStock = computed(() => {
     let stock = 0
-    orderList.value.forEach(item => {
-        if (item.state === '已入库') {
+    DBOrderList.value.forEach(item => {
+        if (item.status === '已入库') {
             stock++
         }
     })
@@ -176,22 +210,49 @@ const inStock = computed(() => {
 //运输中
 const inTransit = computed(() => {
     let transit = 0
-    orderList.value.forEach(item => {
-        if (item.state === '运输中') {
+    DBOrderList.value.forEach(item => {
+        if (item.status === '运输中') {
             transit++
         }
     })
     return transit
 })
+//已送达
 const inServed = computed(() => {
     let serve = 0
-    orderList.value.forEach(item => {
-        if (item.state === '已送达') {
+    DBOrderList.value.forEach(item => {
+        if (item.status === '已送达') {
             serve++
         }
     })
     return serve
 })
+//预计收入
+const proIncome = computed(() => {
+    let income = 0
+    DBOrderList.value.forEach(item => {
+        income += Number(item.price)
+    })
+    return income
+})
+//实际收入
+const actIncome = computed(() => {
+    let income = 0
+    DBOrderList.value.forEach(item => {
+        if (item.status === '已送达') {
+            income += Number(item.price)
+        }
+    })
+    return income
+})
+
+const staffPerformance = async () => {
+    const res = await getStaffPerformance()
+    staff.value = res.result
+    keys = Object.getOwnPropertyNames(res.result)
+    values = keys.map((key: string) => res.result[key])
+    initGraph(keys, values)
+}
 </script>
 
 <style lang="less" scoped>
@@ -243,11 +304,12 @@ const inServed = computed(() => {
             .toroidal_content {
                 font-size: 1rem;
                 p {
+                    padding-top: 0.375rem;
                     padding-left: 0.75rem;
                 }
             }
             .toroidal_graph {
-                height: 100%;
+                height: 70%;
             }
         }
     }

@@ -1,27 +1,18 @@
-import { defineStore } from 'pinia';
-import store from '../index';
-
-// interface userInfo {
-//   username: string,
-//   password: string
-// }
+import { defineStore } from 'pinia'
+import store from '../index'
 
 export const useInfoStore = defineStore({
-  id: 'userInfo',
-  state: () => {
-    return {
-      username: '',
-      password: ''
-    }
-  },
-  getters: {
+    id: 'userInfo',
+    state: () => {
+        return {
+            username: '',
+            password: ''
+        }
+    },
+    getters: {},
+    actions: {}
+})
 
-  },
-  actions: {
-
-  }
-}) 
-
- export function useuserInfoStoreWithOut() {
-  return useInfoStore(store); //  使分仓库名正言顺
- }
+export function useuserInfoStoreWithOut() {
+    return useInfoStore(store) //  使分仓库名正言顺
+}

@@ -1,9 +1,15 @@
 <template>
     <!-- 页面标题 -->
     <div class="header">
-        <div class="layout">
-            <van-cell is-link :title="account" @click="layout = true" />
-            <van-action-sheet v-model:show="layout" :actions="actions" @select="onSelect" />
+        <div class="logout">
+            <van-cell is-link :title="account" @click="logout = true" />
+            <van-action-sheet
+                v-model:show="logout"
+                :actions="actions"
+                cancel-text="取消"
+                close-on-click-action
+                @cancel="onCancel"
+            />
         </div>
         <div class="title">
             <p>订 单</p>
@@ -15,9 +21,9 @@
         <div class="searchBox">
             <div class="searchType">电话</div>
             <div class="inputBox">
-                <input type="text" placeholder="输入电话号码搜索" />
+                <input type="text" v-model="search" placeholder="输入电话号码搜索" />
             </div>
-            <div class="btn">搜索</div>
+            <div class="btn" @click="searchByPhone">搜索</div>
         </div>
         <!-- 分类bar -->
         <div class="kindsBox" ref="kindBox" @click="selectTabbar">
@@ -36,44 +42,50 @@
             <div class="orderItem" v-for="order in orderLists">
                 <div class="top">
                     <div class="leftBox">
-                        <p>订单号： {{ order.ID }}</p>
-                        <p>下单时间： {{ order.calendar }}</p>
+                        <p>订单号： {{ order.id }}</p>
+                        <p>下单时间： {{ order.date }}</p>
                     </div>
                     <div class="rightBox">
-                        <div @click="goToDetail(order.ID)">订单详情 ></div>
+                        <div @click="goToDetail(order.id, order.status)">
+                            订单详情 <van-icon name="arrow" />
+                        </div>
                     </div>
                 </div>
                 <div class="middle">
-                    <div class="start">发货地址:{{ order.dispatchAddress }}</div>
-                    <div class="title">{{ order.state }}</div>
-                    <div class="end">收货地址:{{ order.acceptAddress }}</div>
+                    <div class="start">发货地址:{{ order.senderAddress }}</div>
+                    <div class="title">{{ order.status }}</div>
+                    <div class="end">收货地址:{{ order.recipientAddress }}</div>
                 </div>
-                <div class="bottom">运费： 20元</div>
+                <div class="bottom">运费： {{ order.price }}元</div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { showToast } from 'vant'
+import { ref, nextTick } from 'vue'
+import { showFailToast, showToast } from 'vant'
 import 'vant/es/toast/style'
 import { orderStore } from '../../store/modules/order'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { getAllOrderList } from '../../api/order'
+
 interface orderInfo {
-    ID: string
-    dispatchAssociates: string
-    dispatchPhone: string
-    dispatchAddress: string
-    acceptAssociates: string
-    acceptPhone: string
-    acceptAddress: string
+    id: string
+    sender: string
+    senderPhone: string
+    senderAddress: string
+    recipient: string
+    recipientPhone: string
+    recipientAddress: string
     goodName: string
+    ename: string
     count: number
     weight: number
-    calendar: Date
-    state: string
+    date: Date
+    status: string
+    price: number
 }
 
 const tabbar = [
@@ -82,22 +94,45 @@ const tabbar = [
     { id: 3, name: '运输中' },
     { id: 4, name: '已送达' }
 ]
-
+const actions = ref([
+    {
+        name: '退出登录',
+        subname: '您将退出登录',
+        callback: () => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('account')
+            showToast('退出登录成功!')
+            router.push('/login')
+        }
+    }
+])
+const search = ref('')
 const kindBox = ref(null)
-const layout = ref(false)
+const logout = ref(false)
 const dataIndex = ref(1)
-const account = ref('张三')
-const actions = ref([{ name: '退出登录' }, { name: '' }])
-
+const account = ref('')
 const router = useRouter()
 const useOrderStore = orderStore()
 const { orderList } = storeToRefs(useOrderStore)
 let orderLists = ref([] as orderInfo[])
-orderLists.value = orderList.value
 
-const onSelect = (item: any) => {
-    layout.value = false
-    showToast(item.name)
+nextTick(async () => {
+    account.value = localStorage.getItem('account') as string
+    getAllOrder()
+})
+
+const onCancel = () => showToast('取消')
+//根据电话搜索
+const searchByPhone = () => {
+    const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
+    const phoneReg = /^0\d{2,3}-?\d{7,8}$/ // 固话
+    if (mobileReg.test(search.value) || phoneReg.test(search.value)) {
+        orderLists.value = useOrderStore.findOrderByPhone(search.value)
+        useOrderStore.getOrderList(orderLists.value)
+    } else {
+        showFailToast('号码格式错误!')
+    }
+    search.value = ''
 }
 //tabbar选择
 const selectTabbar = (e: any) => {
@@ -105,15 +140,26 @@ const selectTabbar = (e: any) => {
 
     const content = e.target.textContent
     if (content === '全部') {
-        orderLists.value = orderList.value
+        getAllOrder()
     } else {
         orderLists.value = orderList.value.filter(item => {
-            return item.state === content
+            return item.status === content
         })
     }
 }
-const goToDetail = (ID: string) => {
-    router.push({ path: '/home/orderDetail', query: { ID: ID } })
+//从数据库请求数据
+const getAllOrder = async () => {
+    const res = await getAllOrderList()
+    if (res.data.code !== 0) {
+        showFailToast(res.data.message)
+    } else {
+        useOrderStore.getOrderList(res.data.result)
+    }
+    orderLists.value = orderList.value
+}
+//详情页面
+const goToDetail = (id: string, status: string) => {
+    router.push({ path: '/home/orderDetail', query: { ID: id, status: status } })
 }
 </script>
 
@@ -124,17 +170,16 @@ const goToDetail = (ID: string) => {
     padding: 1rem 1rem 0;
     justify-content: space-between;
     align-items: center;
-    .layout {
+    .logout {
         .van-cell {
-            background: #232628;
+            display: flex;
+            background: #022e57;
             align-items: center;
-            border-radius: 1.5rem;
+            border-radius: 1rem;
             color: #fff;
             font-size: 1rem;
-            .van-cell__title {
-                flex: none;
-                padding: 0.5rem 0rem;
-            }
+            box-sizing: border-box;
+            padding: 0.375rem 1rem;
         }
     }
     p {
@@ -149,7 +194,7 @@ const goToDetail = (ID: string) => {
         margin: 1rem;
         border-radius: 1.3rem;
         height: 2.4rem;
-        background: rgba(0, 0, 0, 0.2);
+        background: #c3d5de;
         display: flex;
         align-items: center;
         font-size: 1rem;
@@ -176,7 +221,7 @@ const goToDetail = (ID: string) => {
             border-radius: 1.3rem;
             border: 1px solid #000;
             text-align: center;
-            background: #000;
+            background: #022e57;
             color: #fff;
             font-size: 1rem;
         }
@@ -186,7 +231,7 @@ const goToDetail = (ID: string) => {
         margin-top: 1.5rem;
         border-radius: 1.3rem;
         height: 2.4rem;
-        background: rgba(0, 0, 0, 0.2);
+        background: #c3d5de;
         display: flex;
         align-items: center;
         font-size: 1rem;
@@ -202,7 +247,7 @@ const goToDetail = (ID: string) => {
             border-bottom-left-radius: 1.3rem;
         }
         .focus {
-            background: rgba(0, 0, 0, 0.8);
+            background: #022e57;
             color: #fff;
             transition: all 0.5s linear;
         }
@@ -220,6 +265,9 @@ const goToDetail = (ID: string) => {
             padding: 1rem;
             box-sizing: border-box;
             margin-bottom: 1rem;
+            &:last-child {
+                margin-bottom: 1.875rem;
+            }
             .top {
                 display: flex;
                 justify-content: space-between;
