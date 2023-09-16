@@ -77,7 +77,6 @@ const goToLogin = () => {
 
 <style lang="less" scoped>
 .container {
-    width: 100vw;
     height: 100vh;
     background-image: url('../../assets/bg.png');
     background-size: cover;
@@ -93,7 +92,7 @@ const goToLogin = () => {
         color: #fff;
         padding: 5rem 2rem;
         border-radius: 1rem;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         .detail {
             p {
                 text-align: center;

@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\customerInfo.vue
- * @LastEditTime: 2023-09-16 18:48:01
+ * @LastEditTime: 2023-09-16 22:09:48
  * @Description: 
 -->
 <template>
@@ -75,7 +75,7 @@ const submitCustomerInfo = () => {
     } else if (customerInfo.customerPhone === '') {
         showToast('客户联系号码不能为空!')
     } else if (!mobileReg.test(customerInfo.customerPhone)) {
-        showToast('客户号码错误!')
+        showToast('客户联系号码格式错误!')
     } else if (customerInfo.customerAddress === '') {
         showToast('客户地址不能为空!')
     } else {
@@ -97,7 +97,6 @@ const submitCustomerInfo = () => {
         padding-top: 1.25rem;
         padding-right: 1.5rem;
     }
-    width: 100vw;
     height: 100vh;
     overflow: auto;
     .customer_input {
@@ -126,7 +125,6 @@ const submitCustomerInfo = () => {
         }
     }
     .customer_operate {
-        width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;

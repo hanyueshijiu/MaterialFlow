@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\store\modules\order.ts
- * @LastEditTime: 2023-09-15 20:02:03
+ * @LastEditTime: 2023-09-16 22:46:18
  * @Description:
  */
 import { defineStore } from 'pinia'
@@ -122,6 +122,18 @@ export const orderStore = defineStore({
         findOrderByPhone(phone): orderInfo[] {
             return this.orderList.filter(item => {
                 return item.recipientPhone === phone || item.senderPhone === phone
+            })
+        },
+        // 根据收件人姓名搜索
+        findOrderByRName(name: string): orderInfo[] {
+            return this.orderList.filter(order => {
+                return order.recipient === name
+            })
+        },
+        // 根据寄件人姓名搜索
+        findOrderBySName(name: string): orderInfo[] {
+            return this.orderList.filter(order => {
+                return order.sender === name
             })
         }
     }

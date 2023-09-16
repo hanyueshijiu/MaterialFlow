@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\orderInfo.vue
- * @LastEditTime: 2023-09-16 18:44:44
+ * @LastEditTime: 2023-09-16 22:13:55
  * @Description: 
 -->
 <template>
@@ -29,7 +29,6 @@
                     readonly
                 />
             </div>
-
             <div class="store_item">
                 <label for="dispatchAddress">发货地址</label>
                 <input
@@ -202,7 +201,6 @@ const submitOrder = async () => {
 
 <style lang="less" scoped>
 .store {
-    width: 100vw;
     height: 100vh;
     .title {
         font-size: 2rem;
@@ -264,28 +262,28 @@ const submitOrder = async () => {
         }
     }
 }
-</style>
-<style>
-.van-cell {
-    font-size: 1rem;
-    padding-left: 0.625rem;
-    background: transparent;
-    padding: 0rem;
-    display: flex;
-    align-items: center;
-    .van-cell__title {
-        flex: none;
-        padding: 0.75rem 0.625rem;
-    }
-    .van-cell__value {
-        flex: none;
-        width: 7.5rem;
-        height: 1.875rem;
-        background: #ffffff;
-        border-radius: 1rem;
+:deep(.store_item) {
+    .van-cell {
+        font-size: 1rem;
+        padding-left: 0.625rem;
+        background: transparent;
+        padding: 0rem;
+        display: flex;
         align-items: center;
-        padding-left: 10px;
-        text-align: left;
+        .van-cell__title {
+            flex: none;
+            padding: 0.75rem 0.625rem;
+        }
+        .van-cell__value {
+            flex: none;
+            width: 7.5rem;
+            height: 1.875rem;
+            background: #ffffff;
+            border-radius: 1rem;
+            align-items: center;
+            padding-left: 10px;
+            text-align: left;
+        }
     }
 }
 </style>

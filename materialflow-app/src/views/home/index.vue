@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\home\index.vue
- * @LastEditTime: 2023-09-15 22:47:20
+ * @LastEditTime: 2023-09-16 22:16:37
  * @Description: 
 -->
 <template>
@@ -49,7 +49,6 @@ watch(
 
 <style lang="less" scoped>
 .home {
-    width: 100vw;
     height: 100vh;
     background-image: url('../../assets/bg2.png');
     background-size: cover;

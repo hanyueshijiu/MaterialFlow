@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\administrator\index.vue
- * @LastEditTime: 2023-09-16 00:02:52
+ * @LastEditTime: 2023-09-16 22:16:41
  * @Description: 
 -->
 <template>
@@ -257,7 +257,6 @@ const staffPerformance = async () => {
 
 <style lang="less" scoped>
 .statistic {
-    width: 100vw;
     padding: 0rem 0.625rem;
     box-sizing: border-box;
     & > div {

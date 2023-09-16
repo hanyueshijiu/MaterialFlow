@@ -68,7 +68,7 @@
                 <van-radio name="已送达">已送达</van-radio>
             </van-radio-group>
         </div>
-        <div class="submitBtn" @click="submitStatus(orderMsg)">提交</div>
+        <div v-if="!disabled" class="submitBtn" @click="submitStatus(orderMsg)">提交</div>
     </div>
 </template>
 
@@ -108,7 +108,9 @@ nextTick(() => {
 
     //判断权限
     const account = localStorage.getItem('account')
-    if (account !== orderMsg.value.ename) {
+    const authority = localStorage.getItem('authority')
+    // 管理员可以修改所有订单，如果不是管理员只能修改自己负责的订单
+    if (authority !== '1' && account !== orderMsg.value.ename) {
         disabled.value = true
     }
 })

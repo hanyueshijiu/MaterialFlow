@@ -82,7 +82,7 @@ const goToRegister = () => {
         color: #fff;
         padding: 5rem 2rem;
         border-radius: 1rem;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
         .detail {
             h1 {
                 background: linear-gradient(to right, #f00, #00f);

@@ -19,11 +19,17 @@
     <div class="container">
         <!-- 搜索框 -->
         <div class="searchBox">
-            <div class="searchType">电话</div>
+            <van-dropdown-menu>
+                <van-dropdown-item
+                    @change="onChangeSelected"
+                    v-model="selected"
+                    :options="options"
+                />
+            </van-dropdown-menu>
             <div class="inputBox">
-                <input type="text" v-model="search" placeholder="输入电话号码搜索" />
+                <input type="text" v-model="search" :placeholder="placeholderText" />
             </div>
-            <div class="btn" @click="searchByPhone">搜索</div>
+            <div class="btn" @click="onSearch">搜索</div>
         </div>
         <!-- 分类bar -->
         <div class="kindsBox" ref="kindBox" @click="selectTabbar">
@@ -38,7 +44,7 @@
             </div>
         </div>
         <!-- 订单详情列表 -->
-        <div class="orderListBox">
+        <div v-show="orderLists.length > 0" class="orderListBox">
             <div class="orderItem" v-for="order in orderLists">
                 <div class="top">
                     <div class="leftBox">
@@ -59,6 +65,7 @@
                 <div class="bottom">运费： {{ order.price }}元</div>
             </div>
         </div>
+        <van-empty v-show="orderLists.length === 0" description="没有该订单~" />
     </div>
 </template>
 
@@ -106,7 +113,14 @@ const actions = ref([
         }
     }
 ])
+const options = [
+    { text: '电话', value: 0 },
+    { text: '收件人', value: 1 },
+    { text: '寄件人', value: 2 }
+]
+const selected = ref(0)
 const search = ref('')
+const placeholderText = ref('请输入电话号码搜索')
 const kindBox = ref(null)
 const logout = ref(false)
 const dataIndex = ref(1)
@@ -122,15 +136,35 @@ nextTick(async () => {
 })
 
 const onCancel = () => showToast('取消')
+const onChangeSelected = () => {
+    if (selected.value === 0) {
+        placeholderText.value = '请输入电话号码搜索'
+    } else if (selected.value === 1) {
+        placeholderText.value = '请输入收件人姓名搜索'
+    } else {
+        placeholderText.value = '请输入寄件人姓名搜索'
+    }
+    getAllOrder()
+}
 //根据电话搜索
-const searchByPhone = () => {
-    const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
-    const phoneReg = /^0\d{2,3}-?\d{7,8}$/ // 固话
-    if (mobileReg.test(search.value) || phoneReg.test(search.value)) {
-        orderLists.value = useOrderStore.findOrderByPhone(search.value)
+const onSearch = async () => {
+    if (search.value === '') {
+        getAllOrder()
+    } else if (selected.value === 0) {
+        const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
+        const phoneReg = /^0\d{2,3}-?\d{7,8}$/ // 固话
+        if (mobileReg.test(search.value) || phoneReg.test(search.value)) {
+            orderLists.value = useOrderStore.findOrderByPhone(search.value)
+            useOrderStore.getOrderList(orderLists.value)
+        } else {
+            showFailToast('号码格式错误!')
+        }
+    } else if (selected.value === 1) {
+        orderLists.value = useOrderStore.findOrderByRName(search.value)
         useOrderStore.getOrderList(orderLists.value)
     } else {
-        showFailToast('号码格式错误!')
+        orderLists.value = useOrderStore.findOrderBySName(search.value)
+        useOrderStore.getOrderList(orderLists.value)
     }
     search.value = ''
 }
@@ -198,11 +232,6 @@ const goToDetail = (id: string, status: string) => {
         display: flex;
         align-items: center;
         font-size: 1rem;
-        .searchType {
-            width: 4rem;
-            margin-left: 1rem;
-            color: #fff;
-        }
         .inputBox {
             flex: 1;
             margin-left: 2rem;
@@ -303,6 +332,13 @@ const goToDetail = (id: string, status: string) => {
                 text-align: right;
             }
         }
+    }
+}
+:deep(.searchBox) {
+    .van-dropdown-menu__bar {
+        background-color: transparent;
+        margin-left: 1rem;
+        box-shadow: none;
     }
 }
 </style>
