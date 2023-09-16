@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\customerInfo.vue
- * @LastEditTime: 2023-09-15 09:31:32
+ * @LastEditTime: 2023-09-16 18:48:01
  * @Description: 
 -->
 <template>
@@ -24,7 +24,7 @@
                     type="text"
                     id="phone"
                     v-model="customerInfo.customerPhone"
-                    placeholder="请输入电话"
+                    placeholder="请输入11位号码"
                 />
             </div>
             <div class="customer_input_item">
@@ -69,10 +69,13 @@ const customerInfo = reactive({
 })
 
 const submitCustomerInfo = () => {
+    const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
     if (customerInfo.customerName === '') {
         showToast('客户姓名不能为空!')
     } else if (customerInfo.customerPhone === '') {
-        showToast('客户联系电话不能为空!')
+        showToast('客户联系号码不能为空!')
+    } else if (!mobileReg.test(customerInfo.customerPhone)) {
+        showToast('客户号码错误!')
     } else if (customerInfo.customerAddress === '') {
         showToast('客户地址不能为空!')
     } else {

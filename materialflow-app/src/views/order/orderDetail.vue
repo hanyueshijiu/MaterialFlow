@@ -37,7 +37,7 @@
             <div class="billBox">
                 <div class="txt">{{ orderMsg.count }}</div>
                 <div class="txt">{{ orderMsg.weight }}</div>
-                <div class="txt">30</div>
+                <div class="txt">{{ orderMsg.price }}</div>
             </div>
         </div>
         <div class="datailBox">
@@ -61,6 +61,7 @@
                 v-model="checked"
                 direction="horizontal"
                 @change="changeState"
+                :disabled="disabled"
             >
                 <van-radio name="已入库">已入库</van-radio>
                 <van-radio name="运输中">运输中</van-radio>
@@ -99,10 +100,17 @@ const useOrderStore = orderStore()
 let orderMsg = ref({} as orderInfo)
 //记录状态
 const checked = ref(route.query.status)
+const disabled = ref<boolean>(false)
 // const checked = ref(useOrderStore.orderMsg[0].status === '' ? '' : useOrderStore.orderMsg[0].status)
 
 nextTick(() => {
     initOrderMessage()
+
+    //判断权限
+    const account = localStorage.getItem('account')
+    if (account !== orderMsg.value.ename) {
+        disabled.value = true
+    }
 })
 
 //初始化页面
@@ -135,6 +143,7 @@ const submitStatus = async (order: orderInfo) => {
     padding: 0rem 0.625rem;
     padding-top: 0.875rem;
     background: #f6f6f6;
+    height: calc(100% - 0.875rem);
     .addressBox {
         display: flex;
         justify-content: center;
@@ -208,7 +217,7 @@ const submitStatus = async (order: orderInfo) => {
         width: 20rem;
         height: 3rem;
         line-height: 3rem;
-        background: #000;
+        background: #022e57;
         border-radius: 2rem;
         text-align: center;
         color: #fff;

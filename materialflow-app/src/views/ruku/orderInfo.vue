@@ -2,7 +2,7 @@
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
  * @FilePath: \materialflow-app\src\views\ruku\orderInfo.vue
- * @LastEditTime: 2023-09-15 19:59:13
+ * @LastEditTime: 2023-09-16 18:44:44
  * @Description: 
 -->
 <template>
@@ -147,12 +147,15 @@ const onConfirm = (value: Date) => {
 }
 //提交信息
 const submitOrder = async () => {
+    const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/ // 手机
     if (orderInfo.senderAddress === '') {
         showToast('发货地址不能为空!')
     } else if (orderInfo.recipient === '') {
         showToast('收货联系人不能为空!')
     } else if (orderInfo.recipientPhone === '') {
         showToast('收货联系电话不能为空!')
+    } else if (!mobileReg.test(orderInfo.recipientPhone)) {
+        showToast('收货联系号码错误!')
     } else if (orderInfo.recipientAddress === '') {
         showToast('收货地址不能为空!')
     } else if (orderInfo.count <= 0) {
