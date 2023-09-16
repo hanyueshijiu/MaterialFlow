@@ -24,11 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { reactive } from "vue";
-import { showSuccessToast, showToast } from 'vant';
-import 'vant/es/toast/style';
-import { login } from '@/api/user';
+import { useRouter } from 'vue-router'
+import { reactive } from 'vue'
+import { showSuccessToast, showToast, showFailToast } from 'vant'
+import 'vant/es/toast/style'
+import { login } from '@/api/user'
 const router = useRouter()
 
 const loginInfo = reactive({
@@ -43,14 +43,19 @@ const submit = async () => {
     } else if (loginInfo.password === '') {
         showToast('请输入密码！')
     } else {
-        await login({
+        const res = await login({
             username: loginInfo.account,
             password: loginInfo.password
-        }).then((res: any) => {
-            console.log(res)
         })
-        showSuccessToast('登录成功！')
-        router.push('/home/orderList')
+        if (res.code !== 0) {
+            showFailToast(res.message)
+        } else {
+            showSuccessToast(res.message)
+            localStorage.setItem('account', loginInfo.account)
+            localStorage.setItem('authority', res.result.authority)
+            localStorage.setItem('token', res.result.token)
+            router.push('/home/orderList')
+        }
     }
 }
 // 跳转注册
