@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <!--
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
@@ -7,7 +5,6 @@
  * @LastEditTime: 2023-09-16 18:44:44
  * @Description: 
 -->
->>>>>>> f07c265f04af57f77fedb4be653d8a5a18fc7f1c
 <template>
     <div class="store">
         <div class="title">入&nbsp;&nbsp;库</div>
