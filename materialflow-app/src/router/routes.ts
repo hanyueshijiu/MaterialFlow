@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 /*
  * @Author: 李羊
  * @Date: 2023-09-11 08:21:32
@@ -5,6 +7,7 @@
  * @LastEditTime: 2023-09-15 16:40:29
  * @Description:
  */
+>>>>>>> f07c265f04af57f77fedb4be653d8a5a18fc7f1c
 import { RouteRecordRaw } from 'vue-router'
 import Home from '../views/home/index.vue'
 
