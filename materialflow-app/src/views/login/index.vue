@@ -28,7 +28,7 @@ import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
 import { showSuccessToast, showToast, showFailToast } from 'vant'
 import 'vant/es/toast/style'
-import { login } from '@/api/user'
+import { login } from '../../api/user'
 const router = useRouter()
 
 const loginInfo = reactive({

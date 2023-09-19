@@ -125,13 +125,17 @@ const initOrderMessage = () => {
     }
 }
 const changeState = async () => {
+    //调用order仓库的方法
     useOrderStore.changeState(checked.value)
+    //提示语
     showToast('修改状态为' + checked.value)
 }
 
 //提交状态改变
 const submitStatus = async (order: orderInfo) => {
+    //调用后端接口修改数据库中的状态
     const result = await updateOrderStatus({ id: order.id.toString(), status: order.status })
+    //响应结果判断
     if (result.code !== 0) {
         showFailToast(result.message)
     } else {

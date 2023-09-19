@@ -38,7 +38,7 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showSuccessToast, showFailToast } from 'vant'
 import 'vant/es/toast/style'
-import { register } from '@/api/user'
+import { register } from '../../api/user'
 const router = useRouter()
 
 const registerInfo = reactive({
